@@ -26,6 +26,25 @@ function Gameboard() {
     return {getBoard, placeToken, printBoard};
 }
 
+/* Cell values
+0 = No token.
+1 = Player 1 token placed.
+2 = Player 2 token placed. */
+function Cell() {
+    let value = 0;
+
+    const modifyCellState = (player) => {
+        value = player;
+    };
+
+    const getValue = () => value;
+
+    return {
+        modifyCellState,
+        getValue
+    };
+}
+
 function GameController(
     playerOneName = "Player One", 
     playerTwoName = "Player Two"
