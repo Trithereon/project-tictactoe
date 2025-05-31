@@ -1,5 +1,29 @@
 function Gameboard() {
     const board = [];
+    const rows = 3;
+    const columns = 3;
+
+    for (let i = 0; i < rows; i++) {
+        board[i] = [];
+        for (let j = 0; j < columns; j++) {
+            board[i].push(Cell());
+        }
+    }
+
+    const getBoard = () => board;
+
+    const placeToken = (column, row, player) => {
+        // Insert token placing logic here.
+    }
+
+    const availableCells = 0; // Insert filter/map to get available cells.
+
+    const printBoard = () => {
+        //const boardWithCellValues
+        console.log(boardWithCellValues);
+    }
+
+    return {getBoard, placeToken, printBoard};
 }
 
 function GameController(
@@ -18,6 +42,7 @@ function GameController(
             token: 2
         }
     ];
+
     // Player 1 starts, then each turn switch alternates between players.
     let activePlayer = players[0];
 
