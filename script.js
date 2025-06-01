@@ -3,6 +3,16 @@ function Gameboard() {
     const rows = 3;
     const columns = 3;
 
+    // Nested loop to create the 3x3 gameboard. 
+    // Each iteration in the outer loop creates a row, 
+    // which the inner loop fills with 3 Cell() objects,
+    // each in their own column.
+    // Note: cells are accessible by board[row][column].
+    // The board is essentially: [
+    //     [Cell(), Cell(), Cell()],  // Row 0 (3 rows)
+    //     [Cell(), Cell(), Cell()],  // Row 1
+    //     [Cell(), Cell(), Cell()]   // Row 2
+    // ];
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
@@ -14,9 +24,10 @@ function Gameboard() {
 
     const placeToken = (column, row, player) => {
         // Insert token placing logic here.
+        // consider that board[] is an array of arrays of Cell() objects.
     }
 
-    const availableCells = 0; // Insert filter/map to get available cells.
+    const availableCells = board.filter( ); // Insert filter/map to get available cells.
 
     const printBoard = () => {
         //const boardWithCellValues
