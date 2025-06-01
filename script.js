@@ -1,4 +1,4 @@
-const gameboard = (function () {
+function Gameboard() {
     const board = [];
     const rows = 3;
     const columns = 3;
@@ -31,7 +31,6 @@ const gameboard = (function () {
         else return console.log('Invalid position selected');
     }
 
-
     // Prints board state to the console.
     // Nested map method loops through entire 2D array.
     // boardWithCellValues becomes a new array holding all updated Cell() values.
@@ -42,7 +41,7 @@ const gameboard = (function () {
     }
 
     return {getBoard, placeToken, printBoard};
-})();
+}
 
 /* Cell values
 0 = No token.
@@ -72,11 +71,11 @@ function GameController(
     const players = [
         {
             name: playerOneName,
-            token: 1
+            token: 1 // Will be displayed as X in UI.
         },
         {
             name: playerTwoName,
-            token: 2
+            token: 2 // Will be displayed as O in UI.
         }
     ];
 
@@ -110,3 +109,5 @@ function GameController(
         getActivePlayer
     };
 }
+
+const game = GameController();
