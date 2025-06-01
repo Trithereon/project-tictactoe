@@ -30,7 +30,7 @@ function Gameboard() {
 
         // If targetCell is available, apply player's token.
         if (targetCell.getValue() === 0) targetCell.modifyCellValue(player);
-        else return console.log('Invalid position selected');
+        else throw new Error('Invalid position selected');
     }
 
     // Prints board state to the console.
@@ -99,9 +99,8 @@ function GameController(
     };
 
     const playRound = (column, row) => {
-        console.log(`Placing ${getActivePlayer().name}'s 
-        token in column ${column} and row ${row}.`);
         board.placeToken(column, row, getActivePlayer().token);
+        console.log(`Placing ${getActivePlayer().name}'s token in column ${column} and row ${row}.`);
         switchPlayerTurn();
         printNewRound();
     };
