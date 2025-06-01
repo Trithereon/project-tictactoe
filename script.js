@@ -1,9 +1,9 @@
-function Gameboard() {
+const gameboard = (function () {
     const board = [];
     const rows = 3;
     const columns = 3;
 
-    // Nested loop to create the 3x3 gameboard. 
+    // Nested loop to create the 3x3 gameboard template. 
     // Each iteration in the outer loop creates a row, 
     // which the inner loop fills with 3 Cell() objects,
     // each in their own column.
@@ -22,20 +22,27 @@ function Gameboard() {
 
     const getBoard = () => board;
 
-    const placeToken = (column, row, player) => {
-        // Insert token placing logic here.
+    const placeToken = (row, column, player) => {
         // consider that board[] is an array of arrays of Cell() objects.
+        const targetCell = board[row][column];
+
+        // If targetCell is available, apply player's token.
+        if (targetCell.getValue() === 0) targetCell.modifyCellValue(player);
+        else return console.log('Invalid position selected');
     }
 
-    const availableCells = board.filter( ); // Insert filter/map to get available cells.
 
+    // Prints board state to the console.
+    // Nested map method loops through entire 2D array.
+    // boardWithCellValues becomes a new array holding all updated Cell() values.
     const printBoard = () => {
-        //const boardWithCellValues
+        const boardWithCellValues = board.map((row) => row.map((cell) =>
+        cell.getValue()));
         console.log(boardWithCellValues);
     }
 
     return {getBoard, placeToken, printBoard};
-}
+})();
 
 /* Cell values
 0 = No token.
@@ -44,14 +51,14 @@ function Gameboard() {
 function Cell() {
     let value = 0;
 
-    const modifyCellState = (player) => {
+    const modifyCellValue = (player) => {
         value = player;
     };
 
     const getValue = () => value;
 
     return {
-        modifyCellState,
+        modifyCellValue,
         getValue
     };
 }
