@@ -1,3 +1,5 @@
+// Factory function for the Gameboard which gives access to 
+// functions getBoard, placeToken, and printBoard.
 function Gameboard() {
     const board = [];
     const rows = 3;
@@ -43,12 +45,15 @@ function Gameboard() {
     return {getBoard, placeToken, printBoard};
 }
 
-/* Cell values
-0 = No token.
-1 = Player 1 token placed.
-2 = Player 2 token placed. */
+// Factory function for the Cell which gives access to
+// functions modifyCellValue and getValue.
 function Cell() {
     let value = 0;
+    /* Cell values
+        0 = No token.
+        1 = Player 1 token placed.
+        2 = Player 2 token placed. 
+    */
 
     const modifyCellValue = (player) => {
         value = player;
@@ -56,12 +61,12 @@ function Cell() {
 
     const getValue = () => value;
 
-    return {
-        modifyCellValue,
-        getValue
-    };
+    return {modifyCellValue, getValue};
 }
 
+// Factory function for the GameController which gives access to
+// functions playRound and getActivePlayer.
+// It controls the flow of the game.
 function GameController(
     playerOneName = "Player One", 
     playerTwoName = "Player Two"
