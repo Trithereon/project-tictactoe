@@ -98,8 +98,8 @@ function GameController(
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-    const playRound = (column, row) => {
-        board.placeToken(column, row, getActivePlayer().token);
+    const playRound = (row, column) => {
+        board.placeToken(row, column, getActivePlayer().token);
         console.log(`Placing ${getActivePlayer().name}'s token in row ${row} and column ${column}.`);
         if (gameEndingCheck()) return;
         switchPlayerTurn();
@@ -165,7 +165,8 @@ function GameController(
 
     // Resets all cell values
     const reset = () => {
-        game = GameController(); // This might break UI bindings, so a different reset function might be needed.
+        ScreenController();
+        switchPlayerTurn();
     }
 
     // First round start message.
@@ -179,7 +180,7 @@ function GameController(
 }
 
 function ScreenController() {
-    let game = GameController(); // Custom player names can be added as arguments instead.
+    const game = GameController(); // Custom player names can be added as arguments instead.
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
 
@@ -195,12 +196,15 @@ function ScreenController() {
         playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
 
         // Render board squares
-        board.forEach(row => {
-            row.forEach((cell, index) => {
+        board.forEach((row, rowIndex) => {
+            row.forEach((cell, columnIndex) => {
                 // Anything clickable should be a button!
                 const cellButton = document.createElement('button');
                 cellButton.classList.add('cell');
-                cellButton.dataset.cell = index;
+
+                cellButton.dataset.row = rowIndex;
+                cellButton.dataset.column = columnIndex;
+
                 cellButton.textContent = cell.getValue();
                 boardDiv.appendChild(cellButton);
             })
@@ -208,10 +212,13 @@ function ScreenController() {
     }
 
     function clickHandlerBoard(e) {
-        const selectedCell = e.target.dataset.cell;
-        if (!selectedCell) return; // Make sure a cell was correctly clicked.
+        const selectedCellRow = e.target.dataset.row;
+        const selectedCellColumn = e.target.dataset.column;
 
-        game.playRound(selectedCell);
+        // Make sure a cell was correctly clicked.
+        if (!selectedCellRow && !selectedCellColumn) return; 
+
+        game.playRound(selectedCellRow, selectedCellColumn); // playRound expects (column,row).
         updateScreen();
     }
 
