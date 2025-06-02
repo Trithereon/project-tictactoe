@@ -29,7 +29,7 @@ function Gameboard() {
         const targetCell = board[row][column];
 
         // If targetCell is available, apply player's token.
-        if (targetCell.getValue() === 0) targetCell.modifyCellValue(player);
+        if (targetCell.getValue() === 0) targetCell.applyPlayerToken(player);
         else throw new Error('Invalid position selected');
     }
 
@@ -46,7 +46,7 @@ function Gameboard() {
 }
 
 // Factory function for the Cell which gives access to
-// functions modifyCellValue and getValue.
+// functions applyPlayerToken and getValue.
 function Cell() {
     let value = 0;
     /* Cell values
@@ -55,13 +55,13 @@ function Cell() {
         2 = Player 2 token placed. 
     */
 
-    const modifyCellValue = (player) => {
+    const applyPlayerToken = (player) => {
         value = player;
     };
 
     const getValue = () => value;
 
-    return {modifyCellValue, getValue};
+    return {applyPlayerToken, getValue};
 }
 
 // Factory function for the GameController which gives access to
@@ -100,18 +100,83 @@ function GameController(
 
     const playRound = (column, row) => {
         board.placeToken(column, row, getActivePlayer().token);
-        console.log(`Placing ${getActivePlayer().name}'s token in column ${column} and row ${row}.`);
+        console.log(`Placing ${getActivePlayer().name}'s token in row ${row} and column ${column}.`);
+        if (gameEndingCheck()) return;
         switchPlayerTurn();
         printNewRound();
     };
 
-    // Initial game start message.
+    const gameEndingCheck = () => {
+        const player = getActivePlayer();
+        const currentBoard = board.getBoard();
+
+        // "Is there some row where every cell value in the row
+        // equal the current player's token?"
+        const isRowWin = currentBoard.some(row => 
+            row.every(cell => cell.getValue() === player.token));
+
+        // "Is there some column where every cell value in the rows of that column
+        // equal the current player's token, for column 0, 1, 2?"
+        const isColumnWin = [0, 1, 2].some(column => 
+            currentBoard.every(row => row[column].getValue() === player.token));
+        
+        // Diagonals are either [0][0],[1][1],[2][2], OR [2][0],[1][1],[0][2].
+        const isDiagonalWin = [0, 1, 2].every(i => currentBoard[i][i].getValue() === player.token) ||
+            [0, 1, 2].every(i => currentBoard[i][2 - i].getValue() === player.token);
+        
+        // "If all cells are filled but there is no winner."
+        const isTie = !isRowWin && !isColumnWin && !isDiagonalWin &&
+            currentBoard.every(row =>
+                row.every(cell => cell.getValue() !== 0));
+
+        // To test a tie game quickly, copy this into console:
+        //     game.playRound(0, 0); // Top-left
+        //     game.playRound(0, 1); // Top-middle
+        //     game.playRound(0, 2); // Top-right
+        //     game.playRound(1, 1); // Center
+        //     game.playRound(1, 0); // Middle-left
+        //     game.playRound(2, 0); // Bottom-left
+        //     game.playRound(1, 2); // Middle-right
+        //     game.playRound(2, 2); // Bottom-right
+        //     game.playRound(2, 1); // Bottom-middle
+        
+        if (isRowWin || isColumnWin || isDiagonalWin) {
+            victory(player.name);
+            return true;
+        }
+        
+        if (isTie) {
+            tie();
+            return true;        
+        }
+
+        else return false;
+    }
+
+    const victory = (player) => {
+        console.log(`${player} has won the game!`);
+        reset();
+    }
+
+    const tie = () => {
+        console.log('The game has ended in a tie!');
+        reset();
+    }
+
+    // Resets all cell values
+    const reset = () => {
+        game = GameController(); // This might break UI bindings, so a different reset function might be needed.
+    }
+
+    // First round start message.
     printNewRound();
 
     return {
         playRound,
-        getActivePlayer
+        getActivePlayer,
+        getBoard: board.getBoard,
+        gameEndingCheck
     };
 }
 
-const game = GameController();
+let game = GameController(); // Custom player names can be added as arguments instead.
