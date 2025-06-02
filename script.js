@@ -130,15 +130,15 @@ function GameController(
                 row.every(cell => cell.getValue() !== 0));
 
         // To test a tie game quickly, copy this into console:
-        //     game.playRound(0, 0); // Top-left
-        //     game.playRound(0, 1); // Top-middle
-        //     game.playRound(0, 2); // Top-right
-        //     game.playRound(1, 1); // Center
-        //     game.playRound(1, 0); // Middle-left
-        //     game.playRound(2, 0); // Bottom-left
-        //     game.playRound(1, 2); // Middle-right
-        //     game.playRound(2, 2); // Bottom-right
-        //     game.playRound(2, 1); // Bottom-middle
+            // game.playRound(0, 0); // Top-left
+            // game.playRound(0, 1); // Top-middle
+            // game.playRound(0, 2); // Top-right
+            // game.playRound(1, 1); // Center
+            // game.playRound(1, 0); // Middle-left
+            // game.playRound(2, 0); // Bottom-left
+            // game.playRound(1, 2); // Middle-right
+            // game.playRound(2, 2); // Bottom-right
+            // game.playRound(2, 1); // Bottom-middle
         
         if (isRowWin || isColumnWin || isDiagonalWin) {
             victory(player.name);
@@ -174,9 +174,52 @@ function GameController(
     return {
         playRound,
         getActivePlayer,
-        getBoard: board.getBoard,
-        gameEndingCheck
+        getBoard: board.getBoard
     };
 }
 
-let game = GameController(); // Custom player names can be added as arguments instead.
+function ScreenController() {
+    let game = GameController(); // Custom player names can be added as arguments instead.
+    const playerTurnDiv = document.querySelector('.turn');
+    const boardDiv = document.querySelector('.board');
+
+    const updateScreen = () => {
+        // Clear the board.
+        boardDiv.textContent = "";
+
+        // Get the latest board and player turn.
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
+
+        // Display player's turn.
+        playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
+
+        // Render board squares
+        board.forEach(row => {
+            row.forEach((cell, index) => {
+                // Anything clickable should be a button!
+                const cellButton = document.createElement('button');
+                cellButton.classList.add('cell');
+                cellButton.dataset.cell = index;
+                cellButton.textContent = cell.getValue();
+                boardDiv.appendChild(cellButton);
+            })
+        })
+    }
+
+    function clickHandlerBoard(e) {
+        const selectedCell = e.target.dataset.cell;
+        if (!selectedCell) return; // Make sure a cell was correctly clicked.
+
+        game.playRound(selectedCell);
+        updateScreen();
+    }
+
+    boardDiv.addEventListener('click', clickHandlerBoard);
+
+    // Initial render.
+    updateScreen();
+
+}
+
+ScreenController();
