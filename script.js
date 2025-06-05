@@ -155,18 +155,12 @@ function GameController(
 
     const victory = (player) => {
         console.log(`${player} has won the game!`);
-        reset();
+        alert(`${player} has won the game!`);
     }
 
     const tie = () => {
         console.log('The game has ended in a tie!');
-        reset();
-    }
-
-    // Resets all cell values
-    const reset = () => {
-        ScreenController();
-        switchPlayerTurn();
+        alert('The game has ended in a tie!');
     }
 
     // First round start message.
@@ -180,7 +174,8 @@ function GameController(
 }
 
 function ScreenController() {
-    const game = GameController(); // Custom player names can be added as arguments instead.
+    let game = GameController(); // Custom player names can be added as arguments instead.
+    let abortController = new AbortController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
 
@@ -204,8 +199,14 @@ function ScreenController() {
 
                 cellButton.dataset.row = rowIndex;
                 cellButton.dataset.column = columnIndex;
+                
+                switch (cell.getValue()) {
+                    case 0: cellButton.textContent = ''; break;
+                    case 1: cellButton.textContent = 'X'; break;
+                    case 2: cellButton.textContent = 'O'; break;
+                    default: cellButton.textContent = ''; break; // Fall back, just in case.
+                }
 
-                cellButton.textContent = cell.getValue();
                 boardDiv.appendChild(cellButton);
             })
         })
@@ -222,9 +223,32 @@ function ScreenController() {
         updateScreen();
     }
 
-    boardDiv.addEventListener('click', clickHandlerBoard);
+    const initializeEventListeners = () => {
+        // Abort previous controller to remove old listeners.
+        abortController.abort();
+
+        // Create new controller.
+        abortController = new AbortController();
+
+        // Add event listeners with abort signal.
+        boardDiv.addEventListener('click', clickHandlerBoard, {
+            signal: abortController.signal
+        });
+    }
+
+    const resetGame = () => {
+        game = GameController();
+        initializeEventListeners();
+        updateScreen();
+    }
+
+    // Restart button.
+    document.querySelector('#restart-button').addEventListener('click', () => {
+        resetGame();
+    });
 
     // Initial render.
+    initializeEventListeners();
     updateScreen();
 
 }
