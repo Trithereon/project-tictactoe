@@ -68,8 +68,8 @@ function Cell() {
 // functions playRound and getActivePlayer.
 // It controls the flow of the game.
 function GameController(
-    playerOneName = "Player One", 
-    playerTwoName = "Player Two"
+    playerOneName = "Player One (X)", 
+    playerTwoName = "Player Two (O)"
 ) {
     const board = Gameboard();
 
@@ -174,7 +174,9 @@ function GameController(
 }
 
 function ScreenController() {
+
     let game = GameController(); // Custom player names can be added as arguments instead.
+
     let abortController = new AbortController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
@@ -188,7 +190,7 @@ function ScreenController() {
         const activePlayer = game.getActivePlayer();
 
         // Display player's turn.
-        playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
+        playerTurnDiv.textContent = `${activePlayer.name}'s turn`;
 
         // Render board squares
         board.forEach((row, rowIndex) => {
@@ -254,3 +256,5 @@ function ScreenController() {
 }
 
 ScreenController();
+
+
