@@ -28,24 +28,39 @@ body {
 }
 
 #restart-button {
-  background: rgb(25, 146, 212);
+  background-color: rgb(25, 146, 212);
   border: 1px solid rgb(25, 146, 212);
-  box-shadow: 0px 4px 0 rgb(25, 146, 212), 2px 4px 6px rgb(25, 146, 212);
+  box-shadow: 0px 3px rgb(25, 146, 212);
   color:#FFFFFF;
   border-radius: 20px;
   font-weight: 900;
   letter-spacing: 1px;
-  transition: all 150ms linear;
+  transition: all 100ms linear;
   padding: 10px 30px;
   cursor: pointer;
 }
 
 #restart-button:hover {
-  background: rgb(30, 100, 255);
+  background-color: rgb(30, 100, 255);
   border: 1px solid rgba(black, .5);
   transition: all 250ms linear;
 }
 
 #restart-button:active {
-  background: blue;
+  background-color: blue;
+  box-shadow: 0px 3px blue;
+  border: 1px solid blue;
+  transform: translateY(1px);
+}
+
+button.cell {
+  transition: filter 180ms ease; 
+}
+
+button.cell:hover {
+  filter: brightness(0.9);
+}
+
+button.cell:active {
+  filter: brightness(0.8);
 }
